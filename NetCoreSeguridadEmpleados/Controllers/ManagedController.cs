@@ -39,6 +39,18 @@ namespace NetCoreSeguridadEmpleados.Controllers
                 Claim claimName =
                     new Claim(ClaimTypes.Name, empleado.Apellido);
                 identity.AddClaim(claimName);
+                Claim claimId =
+                    new Claim(ClaimTypes.NameIdentifier, empleado.IdEmpleado.ToString());
+                identity.AddClaim(claimId);
+                Claim claimOficio =
+                    new Claim(ClaimTypes.Role, empleado.Oficio);
+                identity.AddClaim(claimOficio);
+                Claim claimSalario =
+                    new Claim("Salario", empleado.Salario.ToString());
+                identity.AddClaim(claimSalario);
+                Claim claimDepartamento =
+                    new Claim("Departamento", empleado.Departamento.ToString());
+                identity.AddClaim(claimDepartamento);
                 //COMO POR AHORA NO VOY A UTILIZAR NI SE UTILIZAR ROLES
                 //NO LO INCLUIMOS
                 ClaimsPrincipal userPrincipal =
@@ -46,9 +58,11 @@ namespace NetCoreSeguridadEmpleados.Controllers
                 await HttpContext.SignInAsync(
                     CookieAuthenticationDefaults.AuthenticationScheme,
                     userPrincipal);
-                //LO VAMOS A LLEVAR A UNA VISTA QUE TODAVIA NO TENEMOS
-                //QUE SERA EL PERFIL DEL EMPLEADO
-                return RedirectToAction("PerfilEmpleado", "Empleados");
+                //LO VAMOS A LLEVAR A UNA VISTA CON LA INFORMACION
+                //QUE NOS DEVUELVE EL FILTER EN TEMPDATA
+                string controller = TempData["controller"].ToString();
+                string action = TempData["action"].ToString();
+                return RedirectToAction(action, controller);
             }
             else
             {
@@ -62,6 +76,11 @@ namespace NetCoreSeguridadEmpleados.Controllers
             await HttpContext.SignOutAsync
                 (CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult ErrorAcceso()
+        {
+            return View();
         }
     }
 }

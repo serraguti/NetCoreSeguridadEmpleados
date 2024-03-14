@@ -4,6 +4,10 @@ using NetCoreSeguridadEmpleados.Data;
 using NetCoreSeguridadEmpleados.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
+//HABILITAMOS SESSION DENTRO DE NUESTRO SERVIDOR
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
+
 //HABILITAMOS LA SEGURIDAD EN SERVICIOS
 builder.Services.AddAuthentication(options =>
 {
@@ -22,7 +26,8 @@ builder.Services.AddDbContext<EmpleadosContext>
     (options => options.UseSqlServer(connectionString));
 //PERSONALIZAMOS NUESTRAS RUTAS
 builder.Services.AddControllersWithViews
-    (options => options.EnableEndpointRouting = false);
+    (options => options.EnableEndpointRouting = false)
+    .AddSessionStateTempDataProvider();
 
 var app = builder.Build();
 
@@ -42,6 +47,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseSession();
 app.UseMvc(routes =>
 {
     routes.MapRoute(
