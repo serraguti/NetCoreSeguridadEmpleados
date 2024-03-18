@@ -62,7 +62,18 @@ namespace NetCoreSeguridadEmpleados.Controllers
                 //QUE NOS DEVUELVE EL FILTER EN TEMPDATA
                 string controller = TempData["controller"].ToString();
                 string action = TempData["action"].ToString();
-                return RedirectToAction(action, controller);
+
+                
+                if (TempData["id"] != null)
+                {
+                    string id = "";
+                    id = TempData["id"].ToString();
+                    return RedirectToAction(action, controller, new { id = id });
+                }
+                else
+                {
+                    return RedirectToAction(action, controller);
+                }
             }
             else
             {

@@ -21,9 +21,11 @@ namespace NetCoreSeguridadEmpleados.Filters
                 context.RouteData.Values["controller"].ToString();
             string action =
                 context.RouteData.Values["action"].ToString();
+            var id = context.RouteData.Values["id"];
             //PARA COMPROBAR SI FUNCIONA, DIBUJAMOS EN CONSOLA
             Debug.WriteLine("Controller: " + controller);
             Debug.WriteLine("Action: " + action);
+            Debug.WriteLine("Id: " + id);
             ITempDataProvider provider =
                 context.HttpContext.RequestServices
                 .GetService<ITempDataProvider>();
@@ -33,6 +35,15 @@ namespace NetCoreSeguridadEmpleados.Filters
             //GUARDAMOS LA INFORMACION EN TEMPDATA
             TempData["controller"] = controller;
             TempData["action"] = action;
+            if (id != null)
+            {
+                TempData["id"] = id.ToString();
+            }else
+            {
+                //ELIMINAMOS LA KEY PARA QUE NO APAREZCA EN 
+                //NUESTRA RUTA 
+                TempData.Remove("id");
+            }
             //VOLVEMOS A GUARDAR LOS CAMBIOS DE ESTE TEMPDATA EN LA APP
             provider.SaveTempData(context.HttpContext, TempData);
 

@@ -42,6 +42,12 @@
                     class="btn btn-info">
                     Details
                 </a>
+                    <a asp-controller="Empleados"
+                       asp-action="Details"
+                       asp-route-id="@item.IdEmpleado"
+                       class="btn btn-success">
+                        Details ID
+                    </a>
             </td>
         </tr>
 }
